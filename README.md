@@ -1,0 +1,1 @@
+# bug-Hunter-academy-version-1.2
