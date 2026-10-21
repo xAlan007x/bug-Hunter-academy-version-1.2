@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Hunter Academy - Hardware & Security Testing Framework</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                            dark: '#0a0f0d',
+                            card: '#111915',
+                            accent: '#00ff66'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js for Reactive State -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .glow-green {
+            box-shadow: 0 0 25px -5px rgba(34, 197, 94, 0.4);
+        }
+        .glow-card:hover {
+            box-shadow: 0 0 20px -3px rgba(34, 197, 94, 0.3);
+            border-color: rgba(34, 197, 94, 0.6);
+        }
+    </style>
+</head>
+<body x-data="appData()" :class="darkMode ? 'dark bg-[#070b09] text-gray-100' : 'bg-slate-50 text-slate-800'" class="transition-colors duration-300 min-h-screen flex flex-col justify-between">
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 backdrop-blur-md border-b border-gray-200 dark:border-green-900/40 bg-white/80 dark:bg-[#070b09]/80 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Title -->
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-700 flex items-center justify-center text-white shadow-lg shadow-green-500/20 font-bold text-xl">
+                        <i class="fa-solid font-mono fa-bug"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-tight font-mono text-green-600 dark:text-green-400">Bug Hunter Academy</span>
+                        <span class="text-xs px-2 py-0.5 ml-2 rounded-full bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300 border border-green-300 dark:border-green-800">Hardware & IoT</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Links & Theme Toggle -->
+                <div class="flex items-center gap-4">
+                    <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                        <a href="#overview" class="hover:text-green-500 transition-colors">Información</a>
+                        <a href="#gallery" class="hover:text-green-500 transition-colors">Componentes</a>
+                        <a href="#architecture" class="hover:text-green-500 transition-colors">Arquitectura</a>
+                        <a href="#modules" class="hover:text-green-500 transition-colors">Módulos</a>
+                    </nav>
+
+                    <!-- Dark Mode Toggle Button -->
+                    <button @click="darkMode = !darkMode" class="p-2.5 rounded-lg border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all text-gray-600 dark:text-gray-300" title="Cambiar Tema">
+                        <i x-show="!darkMode" class="fa-solid fa-moon text-lg"></i>
+                        <i x-show="darkMode" class="fa-solid fa-sun text-lg text-yellow-400"></i>
+                    </button>
+
+                    <!-- GitHub Repo Link -->
+                    <a href="https://github.com/xAlan007x/Bug-Hunter-Academy-" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-green-600 dark:hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-all shadow-md">
+                        <i class="fa-brands fa-github text-lg"></i>
+                        <span class="hidden sm:inline">Ver Repositorio</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section / Pantalla Inicial Banner -->
+        <section class="relative py-16 md:py-24 overflow-hidden border-b border-gray-200 dark:border-green-900/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <!-- Text Info -->
+                    <div class="lg:col-span-7 space-y-6 text-left">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-mono">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            xAlan007x / Bug-Hunter-Academy-
+                        </div>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+                            Plataforma de <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-500 via-emerald-400 to-teal-500">Hardware Hacking</span> y Testing
+                        </h1>
+                        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed">
+                            Framework educativo e interactivo diseñado para el aprendizaje y auditoría de seguridad en entornos embebidos, prototipado electrónico, microcontroladores y prototipos de testeo IoT.
+                        </p>
+
+                        <div class="flex flex-wrap gap-4 pt-2">
+                            <a href="#gallery" class="px-6 py-3 rounded-lg bg-green-600 hover:bg-green-500 text-white font-medium shadow-lg shadow-green-600/30 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-microchip"></i> Ver Componentes
+                            </a>
+                            <a href="https://github.com/xAlan007x/Bug-Hunter-Academy-" target="_blank" class="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-700 hover:border-green-500 font-medium transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-code-branch"></i> Clonar Proyecto
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image Placeholder (Pantalla Inicial) -->
+                    <div class="lg:col-span-5">
+                        <div class="relative group rounded-2xl overflow-hidden border-2 border-dashed border-green-500/40 bg-gray-100 dark:bg-gray-900/60 p-2 shadow-2xl">
+                            <div class="relative aspect-video rounded-xl overflow-hidden bg-gray-800 flex flex-col items-center justify-center text-center p-4">
+                                <img :src="images.hero.url" :alt="images.hero.title" class="w-full h-full object-cover rounded-lg" x-show="images.hero.url" />
+                                <div x-show="!images.hero.url" class="space-y-3 p-6">
+                                    <i class="fa-solid fa-desktop text-5xl text-green-500/60"></i>
+                                    <p class="text-sm font-semibold text-gray-300">Placeholder: Pantalla Inicial del Proyecto</p>
+                                    <p class="text-xs text-gray-400">Captura de la interfaz principal o diagrama general</p>
+                                </div>
+
+                                <!-- Action Overlay for Image Management -->
+                                <div class="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 p-4">
+                                    <button @click="openImageModal('hero')" class="bg-green-600 hover:bg-green-500 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-upload"></i> Cambiar Imagen
+                                    </button>
+                                    <button @click="zoomImage(images.hero.url, 'Pantalla Inicial')" x-show="images.hero.url" class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1">
+                                        <i class="fa-solid fa-expand"></i> Ampliar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-2 px-2 py-1 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 font-mono">
+                                <span>[ HERO_COVER_DISPLAY ]</span>
+                                <span class="text-green-500">Estado: Listo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Overview & Architecture -->
+        <section id="overview" class="py-16 bg-slate-100/50 dark:bg-black/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <h2 class="text-3xl font-bold font-mono text-green-600 dark:text-green-400">Resumen y Objetivos</h2>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        Aprende sobre la estructura y propósito del repositorio **Bug-Hunter-Academy-**, integrando conceptos de ingeniería inversa, electrónica básica y ciberseguridad.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature Card 1 -->
+                    <div class="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] shadow-sm hover:border-green-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Seguridad Embebida / IoT</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Análisis de vectores de ataque en circuitos, interceptación de señales seriales (UART, SPI, I2C) y auditoría de hardware.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 2 -->
+                    <div class="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] shadow-sm hover:border-green-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Electrónica Practica</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Ensamblaje en protoboard, medición e interpretación de componentes pasivos (resistores, capacitores) y activos.
+                        </p>
+                    </div>
+
+                    <!-- Feature Card 3 -->
+                    <div class="p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] shadow-sm hover:border-green-500/50 transition-all">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center text-2xl mb-4">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">Educación Interactiva</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            Interfaces visuales paso a paso diseñadas para capacitar en el descubrimiento y explotación de bugs en dispositivos físicos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Component Showcase Gallery -->
+        <section id="gallery" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                    <div>
+                        <div class="text-xs font-mono text-green-500 tracking-wider uppercase mb-1">Galería de Hardware</div>
+                        <h2 class="text-3xl font-extrabold tracking-tight">Galería Interactiva de Componentes</h2>
+                    </div>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 md:mt-0 max-w-md">
+                        Haz clic en las imágenes para ampliarlas o utiliza el botón para cargar tus propias fotos de tus componentes y circuitos.
+                    </p>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Component Card 1: Pantalla Inicial -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.pantallaInicial.url" x-show="images.pantallaInicial.url" class="w-full h-full object-cover">
+                            <div x-show="!images.pantallaInicial.url" class="text-center p-4">
+                                <i class="fa-solid fa-tv text-4xl text-green-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Pantalla Inicial / Dashboard</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('pantallaInicial')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.pantallaInicial.url, 'Pantalla Inicial')" x-show="images.pantallaInicial.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-desktop text-green-500 text-sm"></i> Pantalla Inicial
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Interfaz del software principal del sistema Bug Hunter Academy. Muestra alertas, estados de los pines y menú de herramientas de hacking.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-green-600 dark:text-green-400 font-mono">
+                                Tag: #UI #MainDashboard
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Card 2: Resistor -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.resistor.url" x-show="images.resistor.url" class="w-full h-full object-cover">
+                            <div x-show="!images.resistor.url" class="text-center p-4">
+                                <i class="fa-solid fa-bolt text-4xl text-yellow-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Resistor / Componentes Pasivos</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('resistor')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.resistor.url, 'Resistores y Componentes')" x-show="images.resistor.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-microchip text-yellow-500 text-sm"></i> Resistor y Componentes
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Resistencias de pull-up, pull-down y divisores de voltaje cruciales para proteger pines de entrada/salida durante ataques de inyección de fallos.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-yellow-600 dark:text-yellow-400 font-mono">
+                                Tag: #Electronics #PassiveComp
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Card 3: Pantallas -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.pantallas.url" x-show="images.pantallas.url" class="w-full h-full object-cover">
+                            <div x-show="!images.pantallas.url" class="text-center p-4">
+                                <i class="fa-solid fa-display text-4xl text-blue-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Displays (OLED / Nextion / LCD)</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('pantallas')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.pantallas.url, 'Displays y Módulos')" x-show="images.pantallas.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-tv text-blue-500 text-sm"></i> Pantallas / Displays
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Módulos de visualización SSD1306 (OLED I2C), pantallas LCD 16x2 y Nextion para retroalimentación gráfica interactiva y menus de comandos.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-blue-600 dark:text-blue-400 font-mono">
+                                Tag: #Display #OLED #Nextion
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Card 4: Protoboard -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.protoboard.url" x-show="images.protoboard.url" class="w-full h-full object-cover">
+                            <div x-show="!images.protoboard.url" class="text-center p-4">
+                                <i class="fa-solid fa-grip text-4xl text-orange-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Protoboard & Breadboard</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('protoboard')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.protoboard.url, 'Montaje en Protoboard')" x-show="images.protoboard.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-layer-group text-orange-500 text-sm"></i> Protoboard y Montaje
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Layout de prueba en placa sin soldadura para prototipado rápido de arneses de interceptación, jumpers y puentes de datos.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-orange-600 dark:text-orange-400 font-mono">
+                                Tag: #Breadboard #Prototyping
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Card 5: Diagramas -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.diagramas.url" x-show="images.diagramas.url" class="w-full h-full object-cover">
+                            <div x-show="!images.diagramas.url" class="text-center p-4">
+                                <i class="fa-solid fa-project-diagram text-4xl text-purple-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Diagrama de Pines & Conexiones</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('diagramas')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.diagramas.url, 'Diagrama de Pines')" x-show="images.diagramas.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-diagram-project text-purple-500 text-sm"></i> Diagrama de Pines
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Esquema eléctrico indicando la asignación de pines GPIO, buses de comunicación RX/TX, SDA/SCL, GND y VCC.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-purple-600 dark:text-purple-400 font-mono">
+                                Tag: #Schematics #Pinout
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Component Card 6: Capturas Sistema -->
+                    <div class="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-[#111915] overflow-hidden shadow-sm hover:shadow-md transition-all glow-card flex flex-col">
+                        <div class="relative group bg-gray-900 aspect-video flex items-center justify-center overflow-hidden">
+                            <img :src="images.capturas.url" x-show="images.capturas.url" class="w-full h-full object-cover">
+                            <div x-show="!images.capturas.url" class="text-center p-4">
+                                <i class="fa-solid fa-terminal text-4xl text-emerald-500/50 mb-2"></i>
+                                <p class="text-xs text-gray-300 font-mono">Capturas de Sistema / Consola</p>
+                            </div>
+                            <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                <button @click="openImageModal('capturas')" class="px-3 py-1.5 bg-green-600 text-white rounded text-xs font-medium">Subir / URL</button>
+                                <button @click="zoomImage(images.capturas.url, 'Capturas de Menú')" x-show="images.capturas.url" class="px-3 py-1.5 bg-gray-700 text-white rounded text-xs font-medium">Ampliar</button>
+                            </div>
+                        </div>
+                        <div class="p-5 flex-grow flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-lg mb-1 flex items-center gap-2">
+                                    <i class="fa-solid fa-terminal text-emerald-500 text-sm"></i> Menú de Consola / Logs
+                                </h4>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">
+                                    Vistas del terminal Serie/UART imprimiendo logs de depuración, dump de memoria y selección de módulos de ataque.
+                                </p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs text-emerald-600 dark:text-emerald-400 font-mono">
+                                Tag: #Console #UART #Logs
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Accordions / Detailed Modules -->
+        <section id="modules" class="py-16 bg-slate-100/50 dark:bg-black/20">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-extrabold font-mono text-green-600 dark:text-green-400">Módulos del Sistema</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Explora los módulos técnicos explicados en la documentación del repositorio.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Accordion Item 1 -->
+                    <div class="border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-[#111915] overflow-hidden transition-all">
+                        <button @click="toggleAccordion(1)" class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                            <span class="flex items-center gap-3">
+                                <i class="fa-solid fa-network-wired text-green-500"></i>
+                                Módulo 1: Interceptación Serial (UART / SPI / I2C)
+                            </span>
+                            <i class="fa-solid text-sm text-gray-400" :class="activeAccordion === 1 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="activeAccordion === 1" x-collapse class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Permite la conexión directa a los buses de comunicación del microcontrolador para sniffear tráfico de datos no cifrado, volcado de firmware y captura de credenciales transmitidas por puerto serie.
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 2 -->
+                    <div class="border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-[#111915] overflow-hidden transition-all">
+                        <button @click="toggleAccordion(2)" class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                            <span class="flex items-center gap-3">
+                                <i class="fa-solid fa-code text-blue-500"></i>
+                                Módulo 2: Interfaz Visual & Control con Pantalla
+                            </span>
+                            <i class="fa-solid text-sm text-gray-400" :class="activeAccordion === 2 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="activeAccordion === 2" x-collapse class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Manejo de menús gráficos para seleccionar vectores de ataque de forma autónoma sin necesidad de una computadora conectada, ideal para pruebas de penetración físicas (*BadUSB / Portable Tool*).
+                        </div>
+                    </div>
+
+                    <!-- Accordion Item 3 -->
+                    <div class="border border-gray-200 dark:border-gray-800 rounded-xl bg-white dark:bg-[#111915] overflow-hidden transition-all">
+                        <button @click="toggleAccordion(3)" class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                            <span class="flex items-center gap-3">
+                                <i class="fa-solid fa-microchip text-yellow-500"></i>
+                                Módulo 3: Medición y Calibración de Resistencias
+                            </span>
+                            <i class="fa-solid text-sm text-gray-400" :class="activeAccordion === 3 ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                        </button>
+                        <div x-show="activeAccordion === 3" x-collapse class="px-6 py-4 border-t border-gray-100 dark:border-gray-800 text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
+                            Ajuste preciso de las impedancias en la línea para prevenir sobretensiones y permitir glitching de voltaje seguro sin dañar los componentes bajo prueba.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Uploading / Changing Image URL -->
+    <div x-show="modalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div @click.away="modalOpen = false" class="bg-white dark:bg-[#111915] border border-gray-200 dark:border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <h3 class="text-xl font-bold mb-4 font-mono text-green-600 dark:text-green-400">Actualizar Imagen</h3>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold mb-1 text-gray-600 dark:text-gray-400">URL de Imagen Externa</label>
+                    <input type="url" x-model="tempUrl" placeholder="https://ejemplo.com/imagen.jpg" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent text-sm focus:outline-none focus:border-green-500">
+                </div>
+
+                <div class="relative text-center my-2">
+                    <span class="bg-white dark:bg-[#111915] px-2 text-xs text-gray-400">o subir un archivo local</span>
+                    <hr class="border-gray-200 dark:border-gray-800 -mt-2">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold mb-1 text-gray-600 dark:text-gray-400">Subir de Dispositivo</label>
+                    <input type="file" @change="handleFileUpload($event)" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-green-500/10 file:text-green-600 dark:file:text-green-400 hover:file:bg-green-500/20 cursor-pointer">
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end gap-3">
+                <button @click="modalOpen = false" class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 text-xs font-medium">Cancelar</button>
+                <button @click="saveImage()" class="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-medium shadow">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Zoom Modal -->
+    <div x-show="zoomOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4" @click="zoomOpen = false">
+        <div class="relative max-w-5xl max-h-[90vh] flex flex-col items-center">
+            <img :src="zoomSrc" class="max-w-full max-h-[80vh] object-contain rounded-lg border border-gray-800 shadow-2xl">
+            <p class="mt-3 text-white font-mono text-sm" x-text="zoomCaption"></p>
+            <button @click="zoomOpen = false" class="absolute -top-10 right-0 text-white text-2xl hover:text-green-400">&times; Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Footer with Social Links -->
+    <footer class="border-t border-gray-200 dark:border-green-900/30 bg-white dark:bg-[#050806] py-8 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                &copy; 2026 Bug Hunter Academy &bull; Creado por <span class="text-green-500 font-semibold">xAlan007x</span>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex items-center space-x-6">
+                <!-- Instagram -->
+                <a href="https://instagram.com/tiendavirtus.oficial" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-pink-500 transition-colors flex items-center gap-2 text-sm font-medium" title="Instagram: tiendavirtus.oficial">
+                    <i class="fa-brands fa-instagram text-xl"></i>
+                    <span class="hidden sm:inline">tiendavirtus.oficial</span>
+                </a>
+
+                <!-- YouTube -->
+                <a href="https://youtube.com/@tiendavirtus" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-red-500 transition-colors flex items-center gap-2 text-sm font-medium" title="YouTube: tiendavirtus">
+                    <i class="fa-brands fa-youtube text-xl"></i>
+                    <span class="hidden sm:inline">tiendavirtus</span>
+                </a>
+
+                <!-- GitHub -->
+                <a href="https://github.com/xalan007x" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-green-500 transition-colors flex items-center gap-2 text-sm font-medium" title="GitHub: xalan007x">
+                    <i class="fa-brands fa-github text-xl"></i>
+                    <span class="hidden sm:inline">xalan007x</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Alpine.js Script Logic -->
+    <script>
+        function appData() {
+            return {
+                darkMode: true,
+                activeAccordion: 1,
+                modalOpen: false,
+                zoomOpen: false,
+                currentKey: '',
+                tempUrl: '',
+                zoomSrc: '',
+                zoomCaption: '',
+                images: {
+                    hero: { url: '', title: 'Pantalla Inicial / Dashboard' },
+                    pantallaInicial: { url: '', title: 'Pantalla Inicial' },
+                    resistor: { url: '', title: 'Resistor / Componentes' },
+                    pantallas: { url: '', title: 'Displays / Módulos' },
+                    protoboard: { url: '', title: 'Protoboard & Circuit' },
+                    diagramas: { url: '', title: 'Diagramas de Conexión' },
+                    capturas: { url: '', title: 'Capturas del Sistema' }
+                },
+                toggleAccordion(index) {
+                    this.activeAccordion = this.activeAccordion === index ? null : index;
+                },
+                openImageModal(key) {
+                    this.currentKey = key;
+                    this.tempUrl = this.images[key].url;
+                    this.modalOpen = true;
+                },
+                handleFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            this.tempUrl = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                },
+                saveImage() {
+                    if (this.currentKey && this.images[this.currentKey]) {
+                        this.images[this.currentKey].url = this.tempUrl;
+                    }
+                    this.modalOpen = false;
+                },
+                zoomImage(url, title) {
+                    if (!url) return;
+                    this.zoomSrc = url;
+                    this.zoomCaption = title;
+                    this.zoomOpen = true;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

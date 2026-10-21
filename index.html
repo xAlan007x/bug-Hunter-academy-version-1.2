@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Hunter Academy — TiendaVirtus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+  <!-- ══════════ TOP GAME STATUS BAR ══════════ -->
+  <header class="top-game-bar" id="top-game-bar">
+    <div class="top-bar-left">
+      <div class="top-brand-mini" onclick="navTo('inicio')">
+        <span class="top-brand-logo">⚡ Bug Hunter</span>
+      </div>
+      <div class="top-player-pill" id="top-player-pill" onclick="navTo('perfil')">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%230f1c38'/%3E%3Ccircle cx='50' cy='50' r='47' fill='none' stroke='%2300e676' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle'%3E%F0%9F%94%B5%3C/text%3E%3C/svg%3E" alt="Avatar" class="top-avatar-img" id="top-avatar-img">
+        <div class="top-player-info">
+          <span class="top-player-name" id="top-player-name">Alan</span>
+          <div class="top-player-level-row">
+            <span class="top-level-badge" id="top-level-badge">Nivel 3</span>
+            <div class="top-xp-track" title="Progreso de nivel">
+              <div class="top-xp-bar" id="top-xp-bar" style="width: 40%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-bar-right">
+      <div class="stat-chip stars" title="Estrellas ganadas">
+        <span>⭐</span>
+        <span id="top-stars">5</span>
+      </div>
+      <div class="stat-chip coins" title="Monedas / Puntos acumulados">
+        <span>🪙</span>
+        <span id="top-coins">320</span>
+      </div>
+      <button class="btn-icon-top" id="btn-theme-toggle" title="Cambiar a Modo Claro / Oscuro">🌓</button>
+      <button class="btn-icon-top" id="btn-top-config" title="Configuración">⚙</button>
+    </div>
+  </header>
+
+  <!-- ══════════ PANTALLA 1: INICIO ══════════ -->
+  <section id="screen-inicio" class="screen active">
+    <div class="hero-box hero-box-simple">
+
+      <div class="hero-content hero-content-wide">
+        <h1 class="hero-title">Bug Hunter <span>Academy</span></h1>
+        <p class="hero-subtitle">TiendaVirtus · Aprende. Programa. Repara. Avanza.</p>
+
+        <!-- Selector / Estado del Perfil (a todo el ancho, con relieve) -->
+        <div class="perfil-card-hub perfil-card-wide">
+          <div class="perfil-card-label">👤 Perfil del jugador</div>
+
+          <div class="perfil-search-row">
+            <input type="text" id="perfil-search" class="perfil-search-input" placeholder="🔍 Buscar tu nombre..." autocomplete="off">
+            <button class="btn-crear-perfil" id="btn-crear-perfil">➕ Nuevo perfil</button>
+          </div>
+          <div class="perfil-results-dropdown" id="perfil-results"></div>
+
+          <div class="perfil-active-display" id="perfil-actual">
+            <div class="perfil-active-user">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%230f1c38'/%3E%3Ccircle cx='50' cy='50' r='47' fill='none' stroke='%2300e676' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle'%3E%F0%9F%94%B5%3C/text%3E%3C/svg%3E" alt="Avatar" class="top-avatar-img" id="perfil-avatar">
+              <div class="perfil-active-text" style="text-align: left;">
+                <strong id="perfil-actual-nombre">Alan</strong>
+                <span id="perfil-actual-curso" style="color: var(--green-neon);">📚 3° año · Nivel 3</span>
+              </div>
+            </div>
+            <button class="btn-change-profile" id="btn-cambiar-perfil">Cambiar</button>
+          </div>
+        </div>
+
+        <button class="btn-comenzar-main" id="btn-iniciar">
+          <span>🚀 Comenzar Misiones</span>
+        </button>
+
+        <div class="inicio-more">
+          <button class="btn-more-toggle" id="btn-inicio-more" aria-expanded="false">⋯ Más opciones</button>
+          <div class="inicio-more-menu hidden" id="inicio-more-menu">
+            <button class="btn-secondary-action" onclick="navTo('logros')">🏆 Logros</button>
+            <button class="btn-secondary-action" onclick="navTo('sandbox')">🛠️ Modo Libre</button>
+            <button class="btn-secondary-action" onclick="navTo('docente')">🎓 Docente</button>
+            <button class="btn-secondary-action" onclick="navTo('redes')">🌐 Redes Sociales</button>
+            <button class="btn-secondary-action" id="btn-inicio-config">⚙ Configuración</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════ SECCIÓN DE BIENVENIDA (alarga la pantalla principal) ══════ -->
+      <div class="inicio-welcome">
+        <div class="inicio-welcome-badge">👋 ¡Bienvenido/a a la aventura!</div>
+        <h2 class="inicio-welcome-title">Aprendé a programar cazando errores</h2>
+        <p class="inicio-welcome-text">
+          En <strong>Bug Hunter Academy</strong> te convertís en un <strong>cazador de bugs</strong>.
+          Cada misión es un pequeño desafío donde tenés que encontrar el error escondido en el código,
+          entender por qué fallaba y repararlo. ¡Es como un videojuego, pero aprendés de verdad!
+        </p>
+        <p class="inicio-welcome-text">
+          Vas a recorrer <strong>7 mundos</strong> con 30 misiones cada uno: desde las bases de la
+          programación hasta circuitos reales con protoboard, Arduino, LEDs y resistencias.
+          Sumás puntos de experiencia, subes de nivel y desbloqueás copas y logros.
+        </p>
+
+        <!-- Tarjetas de características -->
+        <div class="inicio-features">
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">🎯</div>
+            <h3>Misiones guiadas</h3>
+            <p>Detectá el error, entendé la teoría y aplicá la solución paso a paso.</p>
+          </div>
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">🧩</div>
+            <h3>Circuito real</h3>
+            <p>Cableá una protoboard interactiva con jumpers, LEDs y resistencias en el Mundo 7.</p>
+          </div>
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">🏆</div>
+            <h3>Logros y copas</h3>
+            <p>Ganá experiencia, subí de nivel y llená tu vitrina de trofeos.</p>
+          </div>
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">🛠️</div>
+            <h3>Modo Libre</h3>
+            <p>Armá tus propios circuitos en el sandbox sin reglas ni límites.</p>
+          </div>
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">📚</div>
+            <h3>Biblioteca</h3>
+            <p>Consultá conceptos de Python, HTML, CSS, electrónica y Arduino cuando quieras.</p>
+          </div>
+          <div class="inicio-feature-card">
+            <div class="inicio-feature-icon">🎓</div>
+            <h3>Modo docente</h3>
+            <p>Seguí el progreso de los alumnos y acompañá sus primeros pasos en tecnología.</p>
+          </div>
+        </div>
+
+        <!-- Pasos: cómo empezar -->
+        <div class="inicio-steps">
+          <h2 class="inicio-steps-title">¿Cómo empiezo?</h2>
+          <div class="inicio-steps-row">
+            <div class="inicio-step">
+              <span class="inicio-step-num">1</span>
+              <div>
+                <strong>Creá tu perfil</strong>
+                <p>Poné tu nombre y tu curso para guardar todo tu progreso.</p>
+              </div>
+            </div>
+            <div class="inicio-step">
+              <span class="inicio-step-num">2</span>
+              <div>
+                <strong>Comenzá las misiones</strong>
+                <p>Elegí un mundo, leé el desafío y encontrá el error del código.</p>
+              </div>
+            </div>
+            <div class="inicio-step">
+              <span class="inicio-step-num">3</span>
+              <div>
+                <strong>Repará, validá y ganá</strong>
+                <p>Cada solución te da XP, monedas y te acerca a la siguiente copa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inicio-footer-cta">
+          <p>¿Todo listo? ¡Empezá ahora y convertite en un experto!</p>
+          <button class="btn-comenzar-main btn-comenzar-footer" onclick="document.getElementById('btn-iniciar').click()">
+            <span>🚀 Comenzar Misiones</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA: REDES SOCIALES ══════════ -->
+  <section id="screen-redes" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="redes-header">
+      <div class="redes-header-icon">🌐</div>
+      <h1>Redes Sociales de TiendaVirtus</h1>
+      <p>Seguime, escribime o mirá el contenido. Hacé clic en cualquier red y te llevo directo a la cuenta.</p>
+    </div>
+
+    <div class="redes-grid" id="redes-grid"></div>
+  </section>
+
+  <!-- ══════════ PANTALLA: LOGROS / PORTA-COPAS ══════════ -->
+  <section id="screen-logros" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="logros-hero">
+      <div class="logros-hero-trophy">🏆</div>
+      <h1>Vitrina de Copas y Logros</h1>
+      <p>Cada nivel que superás desbloquea su copa acá. ¡Completá todos los niveles para llenar la vitrina!</p>
+      <div class="logros-summary-row">
+        <span class="logros-summary-chip gold">🏆 <span id="logros-trofeos-total">0/0</span> copas</span>
+        <span class="logros-summary-chip">📘 <span id="logros-mundos-total">0/7</span> mundos</span>
+        <span class="logros-summary-chip">⚡ <span id="logros-xp-total">0</span> XP</span>
+      </div>
+    </div>
+
+    <div id="logros-shelf-container">
+      <!-- Estantes generados dinámicamente por mundo -->
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 2: MAPA DE NIVELES (DUAL-VIEW) ══════════ -->
+  <section id="screen-mapa" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="mapa-dual-container">
+      
+      <!-- Columna Izquierda: Lista de Mundos -->
+      <aside class="mundos-sidebar">
+        <div class="mundos-sidebar-title">Mundos de Entrenamiento</div>
+        <div id="mundos-list-container">
+          <!-- Generado dinámicamente con los 7 mundos -->
+        </div>
+      </aside>
+
+      <!-- Columna Derecha: Vista del Camino de Niveles -->
+      <main class="mapa-path-viewport">
+        <div class="mapa-path-header">
+          <div>
+            <h2 class="mapa-current-world-title" id="mapa-current-title">
+              <span id="mapa-current-icon">📘</span>
+              <span id="mapa-current-name">Mundo 1: Los fundamentos</span>
+            </h2>
+            <p class="mapa-current-world-desc" id="mapa-current-desc">Algoritmos, secuencias lógicas y variables.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button class="btn-secondary-action" onclick="navTo('sandbox')" style="font-size: 0.8rem; padding: 6px 12px;">🛠️ Modo Libre</button>
+            <div class="stat-chip stars">
+              <span>Progreso:</span>
+              <span id="mapa-current-count">10/10</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mapa-nodes-scroll">
+          <div class="mapa-nodes-wrapper" id="mapa-nodes-container">
+            <!-- Nodos interconectados 1, 2, 3... -->
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 3 & 9: BIBLIOTECA DE CONCEPTOS ══════════ -->
+  <section id="screen-biblioteca" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="bib-header">
+      <div class="bib-title-group">
+        <div class="bib-badge-super">📚 ACADEMIA VIRTUS · ENCICLOPEDIA TÉCNICA</div>
+        <h1 class="bib-main-title">Biblioteca de Conceptos</h1>
+        <p class="bib-main-sub">Repasá la teoría fundamental, ejemplos prácticos de código y conexionado de circuitos para convertirte en un maestro depurador.</p>
+      </div>
+
+      <!-- Barra de Búsqueda de Conceptos -->
+      <div class="bib-search-container">
+        <span class="bib-search-icon">🔍</span>
+        <input type="text" id="bib-search-input" class="bib-search-field" placeholder="Buscar concepto, lenguaje, sensor o comando..." autocomplete="off">
+        <button class="bib-search-clear hidden" id="btn-clear-bib-search" title="Limpiar búsqueda">✕</button>
+      </div>
+
+      <!-- Filtros por Categoría con Iconos y Conteo -->
+      <div class="bib-filter-pills" id="bib-filters">
+        <button class="filter-pill active" data-filter="todos">
+          <span>🌟</span><span>Todos</span><span class="pill-count" id="count-todos">0</span>
+        </button>
+        <button class="filter-pill" data-filter="prog">
+          <span>💻</span><span>Programación</span><span class="pill-count" id="count-prog">0</span>
+        </button>
+        <button class="filter-pill" data-filter="elec">
+          <span>⚡</span><span>Electrónica</span><span class="pill-count" id="count-elec">0</span>
+        </button>
+        <button class="filter-pill" data-filter="ard">
+          <span>🔌</span><span>Arduino C++</span><span class="pill-count" id="count-ard">0</span>
+        </button>
+        <button class="filter-pill" data-filter="sens">
+          <span>📡</span><span>Sensores</span><span class="pill-count" id="count-sens">0</span>
+        </button>
+        <button class="filter-pill" data-filter="act">
+          <span>⚙️</span><span>Actuadores</span><span class="pill-count" id="count-act">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Grid de Tarjetas de Conceptos -->
+    <div class="bib-grid" id="bib-grid">
+      <!-- Tarjetas renderizadas dinámicamente con estilo Panel 9 -->
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 4, 5, 6: MISIÓN Y TALLER ══════════ -->
+  <section id="screen-mision" class="screen">
+    
+    <!-- Barra Superior de Misión -->
+    <div class="mision-header-bar">
+      <div class="mision-header-left">
+        <button class="btn-volver-mapa" id="btn-volver-mapa">← Volver a niveles</button>
+        <div class="mision-title-text">
+          <strong id="mision-titulo">Misión 3 — Error en la variable</strong>
+          <span id="mision-mundo">Mundo 1 — Conceptos básicos</span>
+        </div>
+      </div>
+      <div class="mision-stats-right">
+        <div class="mision-badge xp" id="mision-xp">+25 XP</div>
+        <div class="mision-badge hints" id="mision-pistas">💡 3 pistas</div>
+      </div>
+    </div>
+
+    <!-- Stepper de 6 Fases Educativas -->
+    <div class="fases-stepper" id="fases-stepper">
+      <button class="fase-step active" data-fase="aprender"><span class="fase-step-num">1</span><span>Aprender</span></button>
+      <button class="fase-step" data-fase="ejemplo"><span class="fase-step-num">2</span><span>Ejemplo</span></button>
+      <button class="fase-step" data-fase="detectar"><span class="fase-step-num">3</span><span>Detectar</span></button>
+      <button class="fase-step" data-fase="reparar"><span class="fase-step-num">4</span><span>Reparar</span></button>
+      <button class="fase-step" data-fase="comprender"><span class="fase-step-num">5</span><span>Comprender</span></button>
+      <button class="fase-step" data-fase="aplicar"><span class="fase-step-num">6</span><span>Aplicar</span></button>
+    </div>
+
+    <!-- Grid del Taller -->
+    <div class="workbench-grid">
+      
+      <!-- Columna Izquierda: Badge de Lenguaje + Situación + Protoboard (Solo Mundo 7) + Editor + Consola -->
+      <div class="workbench-left">
+        
+        <!-- BADGE DEL LENGUAJE / TECNOLOGÍA ARRIBA DE LA SITUACIÓN PROBLEMÁTICA -->
+        <div class="tech-badge-container">
+          <span class="tech-badge tech-python" id="mision-tech-badge">🐍 PYTHON</span>
+        </div>
+
+        <!-- Situación problemática -->
+        <div class="situacion-card">
+          <div class="situacion-card-tag">Situación problemática</div>
+          <p class="situacion-card-text" id="situacion-text"></p>
+          <div class="situacion-card-obj" id="situacion-objetivo"></div>
+        </div>
+
+        <!-- SIMULADOR PROTOBOARD INTERACTIVA (SOLO EN MUNDO 7: PROTOBOARD) -->
+        <div class="placa-box-container hidden" id="placa-box">
+          <div class="placa-toolbar">
+            <div class="placa-toolbar-title">
+              <span>🔌 Protoboard ampliada & Arduino Uno</span>
+            </div>
+
+            <!-- Paleta de colores de cables -->
+            <div class="wire-color-picker" title="Color de cable">
+              <button class="color-dot-btn green selected" data-color="#34c759" title="Verde"></button>
+              <button class="color-dot-btn red" data-color="#ff3b30" title="Rojo (5V / Positivo)"></button>
+              <button class="color-dot-btn blue" data-color="#007aff" title="Azul (GND / Tierra)"></button>
+              <button class="color-dot-btn yellow" data-color="#ffd60a" title="Amarillo (Señal)"></button>
+              <button class="color-dot-btn orange" data-color="#ff9500" title="Naranja"></button>
+              <button class="color-dot-btn black" data-color="#212529" title="Negro"></button>
+            </div>
+
+            <!-- Controles y Zoom -->
+            <div class="placa-tools">
+              <button class="btn-placa-action" id="btn-toggle-wire-style" title="Alternar estilo ortogonal / curvo">📐 Tinkercad</button>
+              <button class="btn-placa-action" id="btn-arrange-wires" title="Ordenar y separar todos los cables">🧹 Organizar cables</button>
+              <button class="btn-placa-action" id="btn-board-zoom-in" title="Acercar">🔍+</button>
+              <button class="btn-placa-action" id="btn-board-zoom-out" title="Alejar">🔍−</button>
+              <button class="btn-placa-action" id="btn-board-zoom-reset" title="Restablecer tamaño">↺</button>
+              <button class="btn-placa-action" id="btn-undo-wire" title="Deshacer último cable">↩</button>
+              <button class="btn-placa-action" id="btn-clear-wires" title="Limpiar cables">🗑</button>
+            </div>
+          </div>
+
+          <div class="placa-svg-wrapper" id="placa-svg">
+            <!-- Renderizado dinámico del simulador -->
+          </div>
+
+          <div class="placa-status-bar">
+            <div class="circuit-indicator">
+              <div class="indicator-led-dot" id="board-led-dot"></div>
+              <span id="board-status-text">LED apagado — Circuito abierto</span>
+            </div>
+            <div class="placa-hint">
+              Zoom: <span id="board-zoom-label">100%</span> · Clic en pin/agujero para tender cables · <strong>clic derecho sobre un cable</strong> para organizarlo.
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicador LED para mundos básicos de electrónica (Mundos 3 a 6) -->
+        <div class="situacion-card" id="led-row" style="display: none; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="led" id="led" style="width: 24px; height: 24px; border-radius: 50%; background: #1e293b; border: 2px solid #475569;"></div>
+            <span id="led-label" style="font-size: 0.85rem; font-weight: 700; color: #94a3b8;">LED apagado</span>
+          </div>
+        </div>
+
+        <!-- Editor de Código -->
+        <div class="editor-card">
+          <div class="editor-header">
+            <span>💻 Editor de código</span>
+            <span style="color: var(--text-muted);" id="editor-lang-label">JavaScript / Python / C++</span>
+          </div>
+          <div class="editor-box">
+            <textarea id="code-editor"></textarea>
+          </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="acciones-card">
+          <div class="acciones-left-group">
+            <button class="btn-ejecutar-glow" id="btn-ejecutar">▶ Ejecutar</button>
+            <button class="btn-workbench-sub" id="btn-reiniciar">↺ Reiniciar</button>
+            <button class="btn-workbench-sub" id="btn-pista">💡 Pista (<span id="pistas-restantes">3</span>)</button>
+          </div>
+          <button class="btn-validar-highlight" id="btn-validar">✓ Validar solución</button>
+        </div>
+
+        <!-- Consola de Salida -->
+        <pre class="consola-card" id="consola" placeholder="Consola de depuración y estado del sistema..."></pre>
+
+      </div>
+
+      <!-- Columna Derecha: Guía de Aprendizaje por Fases -->
+      <div class="workbench-right">
+        <div class="fase-view-card" id="fase-content"></div>
+        <div class="situacion-card hidden" id="pista-box" style="border-left-color: var(--amber-neon);"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 7: MODO LIBRE / SANDBOX (TINKERCAD LIBRE) ══════════ -->
+  <section id="screen-sandbox" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="sandbox-container">
+      <div class="sandbox-toolbar">
+        <div>
+          <h2 style="font-size: 1.15rem; font-weight: 900; color: var(--text-primary); margin-bottom: 2px;">
+            🛠️ Taller de Electrónica Libre (Sandbox)
+          </h2>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);">Agregá componentes y conectá cables ortogonales estilo Tinkercad</span>
+        </div>
+
+        <!-- Bandeja de componentes para agregar -->
+        <div class="sandbox-component-tray">
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('arduino')">🔌 Arduino Uno</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('protoboard')">🧩 Protoboard</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('led_red')">🔴 LED</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('led_green')">🟢 LED Verde</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('resistor')">⚡ Resistencia</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('lcd')">📟 Display LCD</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('button')">🔘 Pulsador</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('pot')">🎛️ Potenciómetro</button>
+          <button class="sb-comp-btn" onclick="SANDBOX.addComponent('buzzer')">🔊 Buzzer</button>
+        </div>
+
+        <!-- Opciones de cables y reset -->
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <div class="wire-color-picker">
+            <button class="color-dot-btn green selected sb-color-btn" data-color="#34c759" title="Verde"></button>
+            <button class="color-dot-btn red sb-color-btn" data-color="#ff3b30" title="Rojo"></button>
+            <button class="color-dot-btn blue sb-color-btn" data-color="#007aff" title="Azul"></button>
+            <button class="color-dot-btn yellow sb-color-btn" data-color="#ffd60a" title="Amarillo"></button>
+            <button class="color-dot-btn black sb-color-btn" data-color="#212529" title="Negro"></button>
+          </div>
+          <button class="btn-placa-action" id="btn-sb-wire-mode">📐 Ortogonal Tinkercad</button>
+          <button class="btn-placa-action" id="btn-sb-arrange">🧹 Organizar cables</button>
+          <button class="btn-placa-action" id="btn-sb-zoom-in">🔍+</button>
+          <button class="btn-placa-action" id="btn-sb-zoom-out">🔍−</button>
+          <button class="btn-placa-action" id="btn-sb-clear">🗑 Vaciar</button>
+        </div>
+      </div>
+
+      <!-- Lienzo Interactivo SVG de Modo Libre -->
+      <div class="sandbox-canvas-wrapper" id="sandbox-canvas"></div>
+
+      <div class="placa-status-bar">
+        <div class="circuit-indicator">
+          <div class="indicator-led-dot" id="sb-led-dot"></div>
+          <span id="sb-status-text">Banco de trabajo listo. Hacé clic en los pines para conectar jumpers.</span>
+        </div>
+        <div class="placa-hint">Zoom: <span id="sb-zoom-label">100%</span> · Clic en pin/agujero · <strong>clic derecho sobre un cable</strong> para organizarlo.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 8: PANEL DEL JUGADOR & AVATAR PERSONALIZADO ══════════ -->
+  <section id="screen-perfil" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="perfil-hub-grid">
+      
+      <!-- Tarjeta del Jugador con Subida de Foto -->
+      <div class="perfil-user-card">
+        <div class="perfil-avatar-wrapper">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='50' fill='%230f1c38'/%3E%3Ccircle cx='50' cy='50' r='47' fill='none' stroke='%2300e676' stroke-width='4'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle'%3E%F0%9F%94%B5%3C/text%3E%3C/svg%3E" alt="Avatar" class="perfil-user-avatar-large" id="pd-avatar-img">
+        </div>
+
+        <!-- Input y Botón para Subir Foto de Perfil Propia -->
+        <input type="file" id="input-avatar-file" accept="image/*" style="display: none;">
+        <button class="btn-upload-photo" id="btn-upload-avatar">
+          <span>📷 Cambiar foto de perfil</span>
+        </button>
+
+        <div class="perfil-user-name" id="pd-nombre">Alan</div>
+        <div class="perfil-user-grade" id="pd-curso">3° año · Cazador de Errores</div>
+
+        <div class="perfil-user-stats-list">
+          <div class="perfil-stat-row"><span>Nivel:</span><strong id="pd-nivel-val">Nivel 3</strong></div>
+          <div class="perfil-stat-row"><span>Experiencia:</span><strong id="pd-xp-val">120 / 300 XP</strong></div>
+          <div class="perfil-stat-row"><span>Misiones:</span><strong id="pd-comp-val">10 misiones</strong></div>
+          <div class="perfil-stat-row"><span>Monedas:</span><strong id="pd-coins-val">🪙 320</strong></div>
+        </div>
+
+        <button class="btn-secondary-action" id="btn-eliminar-perfil" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); margin-top: 10px; font-size: 0.8rem;">
+          🗑 Eliminar perfil
+        </button>
+      </div>
+
+      <!-- Tarjeta de Progreso General e Insignias -->
+      <div class="perfil-analytics-card">
+        <div class="perfil-gauge-section">
+          <div class="circular-gauge-box">
+            <svg class="gauge-svg" viewBox="0 0 100 100">
+              <circle class="gauge-bg" cx="50" cy="50" r="45"></circle>
+              <circle class="gauge-val" id="pd-gauge-circle" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="gauge-center-text" id="pd-gauge-text">18%</div>
+          </div>
+          <div class="gauge-details">
+            <h3 style="font-size: 1.25rem; font-weight: 900;">Progreso General de la Academia</h3>
+            <p id="pd-progreso-sub" style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 4px;">Mundo 1: Los fundamentos completado (10/10)</p>
+          </div>
+        </div>
+
+        <div class="insignias-section">
+          <h4 style="font-size: 1rem; font-weight: 800; color: var(--text-secondary); margin-bottom: 12px;">Insignias Ganadas (<span id="pd-logros-count">3/8</span>)</h4>
+          <div class="insignias-grid" id="logros-grid"></div>
+        </div>
+
+        <div class="quote-banner">
+          <span class="quote-banner-icon">💡</span>
+          <p class="quote-banner-text">"Los errores no son el final, son parte esencial del proceso de aprendizaje."</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ PANTALLA 10: MODO DOCENTE ══════════ -->
+  <section id="screen-docente" class="screen">
+    <div>
+      <button class="btn-volver-top" onclick="navTo('inicio')">← Volver al inicio</button>
+    </div>
+
+    <div class="docente-container">
+      <div>
+        <h1 style="font-size: 1.8rem; font-weight: 900;">🎓 Modo Docente & Panel de Aula</h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">Resumen curricular, seguimiento local e integración de Python, HTML, CSS, JS y Arduino</p>
+      </div>
+
+      <div class="docente-stats-bar">
+        <div class="doc-metric-card"><span class="doc-metric-num">7</span><span class="doc-metric-label">Mundos formativos</span></div>
+        <div class="doc-metric-card"><span class="doc-metric-num">60+</span><span class="doc-metric-label">Misiones prácticas</span></div>
+        <div class="doc-metric-card"><span class="doc-metric-num">5</span><span class="doc-metric-label">Lenguajes enseñados</span></div>
+        <div class="doc-metric-card"><span class="doc-metric-num" id="doc-alumnos-count">1</span><span class="doc-metric-label">Alumnos registrados</span></div>
+      </div>
+
+      <div class="doc-cards-grid">
+        <div class="doc-info-card">
+          <h3>🎯 Trayectoria de Tecnologías</h3>
+          <p>Mundo 1: HTML y Fundamentos lógicos · Mundo 2: Python (Detección de errores y funciones) · Mundo 3: CSS (Estilos) & Electrónica básica · Mundo 4: Arduino C++ · Mundo 5: Python (Automatización) · Mundo 6: JavaScript · Mundo 7: Protoboard interactiva.</p>
+        </div>
+        <div class="doc-info-card">
+          <h3>📋 Metodología Pedagógica</h3>
+          <p>Aprendizaje activo por corrección de errores (Bug Hunting). El estudiante analiza un escenario real descompuesto, identifica la falla, aplica la solución y verifica su funcionamiento en el simulador interactivo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ POPUP DE RESULTADOS / TROFEO ══════════ -->
+  <div id="win-overlay" class="overlay hidden">
+    <div class="win-box-modal">
+      <div class="win-trophy-large">🏆</div>
+      <div class="win-levelup-badge">🏆 Pasaste de nivel</div>
+      <h2 class="win-title-text">¡Misión completada!</h2>
+      <p class="win-subtitle-text" id="win-subtitle">Has reparado el sistema correctamente</p>
+
+      <div class="rewards-row">
+        <div class="reward-pill xp"><span>⚡</span><span id="win-xp-val">+50 XP</span></div>
+        <div class="reward-pill coins"><span>🪙</span><span id="win-coins-val">+20</span></div>
+      </div>
+
+      <div class="win-actions-row">
+        <button class="btn-win-exp" id="btn-win-ver-exp">📖 Ver explicación</button>
+        <button class="btn-win-next" id="btn-win-siguiente">Siguiente nivel →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MODAL CREAR PERFIL ══════════ -->
+  <div id="perfil-overlay" class="overlay hidden">
+    <div class="config-modal-box">
+      <div class="config-header">
+        <h3>➕ Crear perfil de cazador</h3>
+        <button class="btn-close-modal" id="btn-cerrar-perfil">✕</button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <label style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700;">Nombre:
+          <input type="text" id="np-nombre" class="perfil-search-input" style="width: 100%; margin-top: 6px;" placeholder="Ej: Valentina" autocomplete="off">
+        </label>
+        <label style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700;">Apellido:
+          <input type="text" id="np-apellido" class="perfil-search-input" style="width: 100%; margin-top: 6px;" placeholder="Ej: Gómez" autocomplete="off">
+        </label>
+        <label style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 700;">Curso / Año:
+          <select id="np-curso" class="perfil-search-input" style="width: 100%; margin-top: 6px;">
+            <option value="">Selecciona tu curso...</option>
+            <option value="1° año">1° año</option>
+            <option value="2° año">2° año</option>
+            <option value="3° año">3° año</option>
+            <option value="4° año">4° año</option>
+            <option value="5° año">5° año</option>
+            <option value="6° año">6° año</option>
+            <option value="7° año">7° año</option>
+            <option value="Taller">Taller extracurricular</option>
+          </select>
+        </label>
+        <button class="btn-comenzar-main" id="btn-crear-confirm" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-top: 6px;">
+          Crear perfil y jugar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MODAL CONFIGURACIÓN ══════════ -->
+  <div id="config-overlay" class="overlay hidden">
+    <div class="config-modal-box">
+      <div class="config-header">
+        <h3>⚙ Configuración del Juego</h3>
+        <button class="btn-close-modal" id="btn-cerrar-config">✕</button>
+      </div>
+
+      <div class="config-options-list">
+        <div class="config-toggle-row">
+          <span>🌓 Modo de visualización</span>
+          <button class="btn-secondary-action" id="btn-cfg-theme-toggle" style="padding: 6px 14px; font-size: 0.82rem;">Cambiar Claro/Oscuro</button>
+        </div>
+
+        <div class="config-toggle-row">
+          <span>🔊 Sonido general</span>
+          <label class="switch-label"><input type="checkbox" id="cfg-sound" checked><span class="slider-round"></span></label>
+        </div>
+
+        <div class="config-toggle-row">
+          <span>🔉 Volumen: <strong id="cfg-volume-value">50%</strong></span>
+          <input type="range" id="cfg-volume" min="0" max="100" step="1" value="50" class="cfg-volume-slider">
+        </div>
+
+        <div class="config-toggle-row">
+          <span>🎵 Ambiente del lobby</span>
+          <label class="switch-label"><input type="checkbox" id="cfg-sound-lobby" checked><span class="slider-round"></span></label>
+        </div>
+
+        <div class="config-toggle-row">
+          <span>⬆️ Sonido al subir de nivel</span>
+          <label class="switch-label"><input type="checkbox" id="cfg-sound-levelup" checked><span class="slider-round"></span></label>
+        </div>
+
+        <div class="config-toggle-row">
+          <span>✨ Animaciones de circuito</span>
+          <label class="switch-label"><input type="checkbox" id="cfg-anim" checked><span class="slider-round"></span></label>
+        </div>
+
+        <hr style="border: 0; border-top: 1px solid var(--border-subtle); margin: 6px 0;">
+
+        <button class="btn-secondary-action" id="btn-reset-config" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.4); justify-content: center;">
+          🗑 Reiniciar todo el progreso
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ BARRA INFERIOR DOCK ══════════ -->
+  <button class="dock-toggle" id="dock-toggle" title="Ocultar / Mostrar barra de navegación">
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 15l6-6 6 6" stroke="currentColor" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <nav class="dock-nav" id="dock-nav">
+    <button class="dock-btn active" data-screen="inicio"><span>🏠</span><span>Inicio</span></button>
+    <button class="dock-btn" data-screen="mapa"><span>🗺️</span><span>Mapa</span></button>
+    <button class="dock-btn" data-screen="sandbox"><span>🛠️</span><span>Libre</span></button>
+    <button class="dock-btn" data-screen="biblioteca"><span>📚</span><span>Biblioteca</span></button>
+    <button class="dock-btn" data-screen="docente"><span>🎓</span><span>Docente</span></button>
+    <button class="dock-btn" data-screen="perfil"><span>👤</span><span>Perfil</span></button>
+    <button class="dock-btn btn-sound-toggle" id="dock-sound-toggle" title="Activar ambiente"><span>🔊</span><span>Sonido</span></button>
+  </nav>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-notice hidden"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+  <script src="js/data/missions.js"></script>
+  <script src="js/data/mundo1.js"></script>
+  <script src="js/data/mundo2.js"></script>
+  <script src="js/data/mundo3.js"></script>
+  <script src="js/data/mundo4.js"></script>
+  <script src="js/data/mundo5.js"></script>
+  <script src="js/data/mundo6.js"></script>
+  <script src="js/data/mundo7.js"></script>
+  <script src="js/data/concepts.js"></script>
+  <script src="js/engine/safeRunner.js"></script>
+  <script src="js/core/storage.js"></script>
+  <script src="js/core/profiles.js"></script>
+  <script src="js/ui/editor.js"></script>
+<script src="js/ui/circuit.js"></script>
+<script src="js/ui/componentes.js"></script>
+<script src="js/ui/simulador.js"></script>
+<script src="js/ui/sandbox.js"></script>
+<script src="js/ui/placa.js"></script>
+<script src="js/sonidos/lobby.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
